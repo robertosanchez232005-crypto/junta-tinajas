@@ -1,15 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { TarjetaProyecto } from "@/components/proyectos/TarjetaProyecto";
 import { proyectosDemo } from "@/data/proyectos-demo";
 import { FileText, MapPin, Phone, ShieldCheck } from "lucide-react";
-
-// Leaflet requiere `window`, por lo que el mapa se carga solo en el navegador.
-const MapaTinajas = dynamic(
-  () => import("@/components/mapa/MapaTinajas").then((m) => m.MapaTinajas),
-  { ssr: false, loading: () => <div className="h-[420px] animate-pulse rounded-xl bg-institucional-verdeClaro" /> }
-);
 
 export default function PaginaInicio() {
   return (
@@ -74,7 +67,17 @@ export default function PaginaInicio() {
           Ubicación de referencia y límites territoriales de la comunidad.
         </p>
         <div className="mt-6">
-          <MapaTinajas />
+          <div className="flex h-[420px] items-center justify-center rounded-xl border-2 border-dashed border-institucional-verde/40 bg-institucional-verdeClaro px-6 text-center text-gray-700">
+            <div>
+              <p className="font-semibold text-institucional-verdeOscuro">
+                Mapa temporalmente en actualización
+              </p>
+              <p className="mt-2 text-sm">
+                Los límites territoriales oficiales de Las Tinajas se publicarán
+                cuando hayan sido validados por la Junta Comunal.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
