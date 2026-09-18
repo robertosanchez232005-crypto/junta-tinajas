@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  @apply bg-institucional-crema text-gray-900;
+}
+
+/* Contraste y foco visibles para accesibilidad con teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid theme("colors.institucional.dorado");
+  outline-offset: 2px;
+}
+
+/* Botones grandes y legibles, pensados también para adultos mayores */
+.btn-primario {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-institucional-verde
+         px-6 py-3 text-base font-semibold text-white transition
+         hover:bg-institucional-verdeOscuro;
+}
+.btn-secundario {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border-2 border-institucional-verde
+         bg-white px-6 py-3 text-base font-semibold text-institucional-verde transition
+         hover:bg-institucional-verdeClaro;
+}
+
+.campo-formulario {
+  @apply w-full rounded-lg border border-gray-300 px-4 py-2.5 text-base
+         focus:border-institucional-verde focus:ring-1 focus:ring-institucional-verde;
+}
