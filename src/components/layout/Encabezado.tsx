@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import styles from "./Encabezado.module.css";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -9,17 +11,19 @@ const enlaces = [
   { href: "/", texto: "Inicio" },
   { href: "/junta-comunal", texto: "La Junta Comunal" },
   { href: "/proyectos", texto: "Proyectos" },
-  { href: "/atencion-ciudadana", texto: "Atención Ciudadana" },
+  { href: "/consulta-ciudadana", texto: "Consulta Ciudadana" },
   { href: "/transparencia", texto: "Transparencia" },
   { href: "/noticias", texto: "Noticias" },
   { href: "/contacto", texto: "Contacto" }
 ];
 
 export function Encabezado() {
+  const inicio = usePathname() === "/";
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-institucional-verdeClaro bg-white/95 backdrop-blur">
+    <header className={inicio ? styles.portada : "sticky top-0 z-40 border-b border-institucional-verdeClaro bg-white/95 backdrop-blur"}>
+      {inicio && <div className={styles.barra}>Las Tinajas · Dolega · Chiriquí<Link href="/contacto">Contáctanos →</Link></div>}
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-3">
           {/*

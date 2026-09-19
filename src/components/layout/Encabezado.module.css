@@ -1,0 +1,6 @@
+.portada { position:absolute; inset:0 0 auto; z-index:40; color:white; background:linear-gradient(#082d25bb,transparent); }
+.portada > div:not(.barra) > a > span { color:white; }
+.portada > div > nav a { color:white; }
+.portada > div > button { color:white; }
+.barra { min-height:34px; display:flex; justify-content:space-between; gap:20px; padding:8px max(20px,calc((100% - 1152px)/2)); background:#214c3d; font-size:11px; }
+.barra a { white-space:nowrap; }

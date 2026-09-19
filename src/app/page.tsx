@@ -1,42 +1,19 @@
-import Image from "next/image";
+import { ComunidadTinajas } from "@/components/home/ComunidadTinajas";
+import { PortadaTinajas } from "@/components/home/PortadaTinajas";
+import { PublicacionesInicio } from "@/components/home/PublicacionesInicio";
 import Link from "next/link";
 import { TarjetaProyecto } from "@/components/proyectos/TarjetaProyecto";
-import { proyectosDemo } from "@/data/proyectos-demo";
+import { listarProyectos } from "@/lib/proyectos-publicos";
 import { FileText, MapPin, Phone, ShieldCheck } from "lucide-react";
 
-export default function PaginaInicio() {
+export const dynamic = "force-dynamic";
+
+export default async function PaginaInicio() {
+  const { proyectos, fallo } = await listarProyectos();
   return (
     <>
-      {/* ---------- PORTADA ---------- */}
-      <section className="bg-institucional-verdeClaro">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 lg:grid-cols-2">
-          <div>
-            <Image
-              src="/images/logo-junta-tinajas.png"
-              alt="Escudo de la Junta Comunal de Las Tinajas"
-              width={96}
-              height={96}
-              className="mb-6 h-24 w-24 object-contain"
-              priority
-            />
-            <h1 className="text-3xl font-extrabold leading-tight text-institucional-verdeOscuro sm:text-4xl">
-              Junta Comunal de Las Tinajas
-            </h1>
-            <p className="mt-3 text-lg text-gray-700">
-              Trabajando juntos por el desarrollo de nuestra comunidad.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/proyectos" className="btn-primario">Ver proyectos</Link>
-              <Link href="/atencion-ciudadana" className="btn-secundario">Atención ciudadana</Link>
-            </div>
-          </div>
-          <div className="flex h-56 items-center justify-center rounded-xl border-2 border-dashed border-institucional-verde/40 bg-white text-center text-sm text-gray-500 sm:h-72">
-            Espacio para imagen representativa de la comunidad
-            <br />
-            (pendiente de fotografía oficial suministrada por la Junta)
-          </div>
-        </div>
-      </section>
+      <PortadaTinajas />
+      <ComunidadTinajas />
 
       {/* ---------- FRANJA DE DATOS PRINCIPALES ---------- */}
       <section className="border-y border-institucional-verdeClaro bg-white">
@@ -82,21 +59,24 @@ export default function PaginaInicio() {
       </section>
 
       {/* ---------- PROYECTOS RECIENTES ---------- */}
-      <section className="bg-institucional-verdeClaro/40 py-14">
+      <section id="publicaciones" className="bg-institucional-verdeClaro/40 py-14">
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Proyectos recientes</h2>
+            <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Proyectos publicados</h2>
             <Link href="/proyectos" className="text-sm font-semibold text-institucional-verde hover:underline">
               Ver todos →
             </Link>
           </div>
+          {fallo ? <p className="mt-6" role="alert">No se pudieron cargar los proyectos.</p> : proyectos.length === 0 ? <p className="mt-6">Aún no hay proyectos publicados.</p> : null}
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {proyectosDemo.map((p) => (
-              <TarjetaProyecto key={p.slug} {...p} />
+            {proyectos.map((p) => (
+              <TarjetaProyecto key={p.id} proyecto={p} />
             ))}
           </div>
         </div>
       </section>
+
+      <PublicacionesInicio />
 
       {/* ---------- ACCESOS RÁPIDOS ---------- */}
       <section className="mx-auto max-w-6xl px-4 py-14">

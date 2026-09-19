@@ -14,11 +14,19 @@ export function crearClienteServidor() {
           return cookieStore.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.set({ name, value: "", ...options });
-        }
+  try {
+    cookieStore.set({ name, value, ...options });
+  } catch {
+    // El middleware actualiza la sesión.
+  }
+},
+remove(name: string, options: CookieOptions) {
+  try {
+    cookieStore.set({ name, value: "", ...options });
+  } catch {
+    // El middleware actualiza la sesión.
+  }
+}
       }
     }
   );
@@ -27,12 +35,18 @@ export function crearClienteServidor() {
 // Cliente con permisos elevados (service role). Úsese SOLO en el servidor,
 // nunca en código que se envía al navegador (p. ej. operaciones administrativas
 // de almacenamiento que requieran evadir RLS de forma controlada).
-import { createClient } from "@supabase/supabase-js";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 export function crearClienteAdministrativo() {
-  return createClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } }
   );
+}
+
+// Alias asíncrono usado por las Server Actions y páginas del panel nuevo.
+// Mantiene compatible la API existente de la web pública.
+export async function createClient() {
+  return crearClienteServidor();
 }

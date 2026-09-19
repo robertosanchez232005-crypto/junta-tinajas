@@ -1,68 +1,37 @@
-"use client";
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { crearClienteNavegador } from "@/lib/supabase/client";
+export default function Login() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
-export default function PaginaLoginAdmin() {
-  const router = useRouter();
-  const supabase = crearClienteNavegador();
-  const [correo, setCorreo] = useState("");
-  const [clave, setClave] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [cargando, setCargando] = useState(false);
-
-  async function alEnviar(e: React.FormEvent) {
-    e.preventDefault();
-    setCargando(true);
-    setError(null);
-    const { error } = await supabase.auth.signInWithPassword({ email: correo, password: clave });
-    setCargando(false);
-    if (error) {
-      setError("Correo o contraseña incorrectos.");
-      return;
-    }
-    router.push("/admin/dashboard");
-    router.refresh();
+  async function submit(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setError('')
+    const { error } = await createClient().auth.signInWithPassword({ email, password })
+    if (error) { setError('Correo o contraseña incorrectos.'); setBusy(false); return }
+    router.push('/admin'); router.refresh()
   }
 
+  const input = 'w-full rounded-md border border-stone-300 px-3 py-2 focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700/30'
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-14">
-      <div className="mb-6 flex flex-col items-center">
-        {/* Logo oficial también en la pantalla de inicio de sesión del personal */}
-        <img
-          src="/images/logo-junta-tinajas.png"
-          alt="Escudo de la Junta Comunal de Las Tinajas"
-          className="mb-4 h-16 w-16 object-contain"
-        />
-        <h1 className="text-xl font-bold text-institucional-verdeOscuro">Acceso del personal</h1>
-      </div>
-      <form onSubmit={alEnviar} className="space-y-4 rounded-xl border border-gray-200 p-6">
-        <div>
-          <label className="mb-1 block text-sm font-semibold text-gray-700">Correo electrónico</label>
-          <input
-            type="email"
-            required
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            className="campo-formulario"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-semibold text-gray-700">Contraseña</label>
-          <input
-            type="password"
-            required
-            value={clave}
-            onChange={(e) => setClave(e.target.value)}
-            className="campo-formulario"
-          />
-        </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" disabled={cargando} className="btn-primario w-full disabled:opacity-60">
-          {cargando ? "Ingresando…" : "Ingresar"}
+    <main className="flex min-h-screen items-center justify-center bg-stone-50 p-4">
+      <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-xl border bg-white p-8 shadow-sm">
+        <h1 className="text-xl font-bold text-green-900">Panel de la Junta Comunal</h1>
+        <p className="text-sm text-stone-600">Inicia sesión para administrar el contenido del sitio.</p>
+        <div><label className="mb-1 block text-sm font-medium">Correo</label>
+          <input type="email" required autoComplete="email" className={input} value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+        <div><label className="mb-1 block text-sm font-medium">Contraseña</label>
+          <input type="password" required autoComplete="current-password" className={input} value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+        {error && <p className="text-sm text-red-700">{error}</p>}
+        <button disabled={busy} className="w-full rounded-md bg-green-800 py-2 font-semibold text-white hover:bg-green-900 disabled:opacity-60">
+          {busy ? 'Entrando…' : 'Entrar'}
         </button>
       </form>
-    </div>
-  );
+    </main>
+  )
 }
