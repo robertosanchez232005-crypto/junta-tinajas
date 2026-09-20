@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-html-link-for-pages -- Navegación completa intencional en el menú principal. */
 
 import Link from "next/link";
 import Image from "next/image";
@@ -14,7 +15,8 @@ const enlaces = [
   { href: "/consulta-ciudadana", texto: "Consulta Ciudadana" },
   { href: "/transparencia", texto: "Transparencia" },
   { href: "/noticias", texto: "Noticias" },
-  { href: "/contacto", texto: "Contacto" }
+  { href: "/contacto", texto: "Contacto" },
+  { href: "/admin/login", texto: "Iniciar sesión" }
 ];
 
 export function Encabezado() {
@@ -45,13 +47,13 @@ export function Encabezado() {
           </span>
         </Link>
 
-        <nav className="hidden lg:block" aria-label="Menú principal">
-          <ul className="flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden xl:block" aria-label="Menú principal">
+          <ul className="flex items-center gap-4 text-sm font-medium">
             {enlaces.map((enlace) => (
               <li key={enlace.href}>
-                <Link href={enlace.href} className="text-gray-700 hover:text-institucional-verde">
+                <a href={enlace.href} className={enlace.href === "/admin/login" ? "inline-block rounded-md border border-current px-3 py-2 font-semibold" : "text-gray-700 hover:text-institucional-verde"}>
                   {enlace.texto}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -59,7 +61,7 @@ export function Encabezado() {
 
         <button
           type="button"
-          className="rounded-md p-2 text-institucional-verdeOscuro lg:hidden"
+          className="rounded-md p-2 text-institucional-verdeOscuro xl:hidden"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuAbierto}
           onClick={() => setMenuAbierto((v) => !v)}
@@ -69,17 +71,17 @@ export function Encabezado() {
       </div>
 
       {menuAbierto && (
-        <nav className="border-t border-institucional-verdeClaro bg-white lg:hidden" aria-label="Menú móvil">
+        <nav className="border-t border-institucional-verdeClaro bg-white xl:hidden" aria-label="Menú móvil">
           <ul className="flex flex-col gap-1 px-4 py-3 text-base font-medium">
             {enlaces.map((enlace) => (
               <li key={enlace.href}>
-                <Link
+                <a
                   href={enlace.href}
-                  className="block rounded-md px-3 py-3 text-gray-700 hover:bg-institucional-verdeClaro"
+                  className={enlace.href === "/admin/login" ? "block rounded-md bg-green-800 px-3 py-3 font-semibold text-white" : "block rounded-md px-3 py-3 text-gray-700 hover:bg-institucional-verdeClaro"}
                   onClick={() => setMenuAbierto(false)}
                 >
                   {enlace.texto}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>

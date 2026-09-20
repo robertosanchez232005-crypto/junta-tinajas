@@ -18,15 +18,13 @@ export async function middleware(request: NextRequest) {
     }
   )
   const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
-
-  if (!user && pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
+  if (!user && request.nextUrl.pathname !== '/admin/login') {
+    const destino = NextResponse.redirect(new URL('/admin/login', request.url))
+    response.cookies.getAll().forEach(cookie => destino.cookies.set(cookie))
+    return destino
   }
-  if (user && pathname === '/admin/login') {
-    return NextResponse.redirect(new URL('/admin', request.url))
-  }
+  // El layout y las acciones comprueban el permiso. No redirigir cualquier
+  // sesión desde login evita bucles para usuarios sin autorización.
   return response
 }
-
 export const config = { matcher: ['/admin/:path*'] }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ComunidadTinajas } from "@/components/home/ComunidadTinajas";
 import { PortadaTinajas } from "@/components/home/PortadaTinajas";
 import { PublicacionesInicio } from "@/components/home/PublicacionesInicio";
@@ -8,8 +9,7 @@ import { FileText, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function PaginaInicio() {
-  const { proyectos, fallo } = await listarProyectos();
+export default function PaginaInicio() {
   return (
     <>
       <PortadaTinajas />
@@ -58,25 +58,13 @@ export default async function PaginaInicio() {
         </div>
       </section>
 
-      {/* ---------- PROYECTOS RECIENTES ---------- */}
-      <section id="publicaciones" className="bg-institucional-verdeClaro/40 py-14">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Proyectos publicados</h2>
-            <Link href="/proyectos" className="text-sm font-semibold text-institucional-verde hover:underline">
-              Ver todos →
-            </Link>
-          </div>
-          {fallo ? <p className="mt-6" role="alert">No se pudieron cargar los proyectos.</p> : proyectos.length === 0 ? <p className="mt-6">Aún no hay proyectos publicados.</p> : null}
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {proyectos.map((p) => (
-              <TarjetaProyecto key={p.id} proyecto={p} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <Suspense fallback={<div id="publicaciones" role="status" className="mx-auto max-w-6xl px-4 py-14">Cargando proyectos…</div>}>
+        <ProyectosInicio />
+      </Suspense>
 
-      <PublicacionesInicio />
+      <Suspense fallback={<p role="status" className="mx-auto max-w-6xl px-4 py-10">Cargando noticias, avisos y eventos…</p>}>
+        <PublicacionesInicio />
+      </Suspense>
 
       {/* ---------- ACCESOS RÁPIDOS ---------- */}
       <section className="mx-auto max-w-6xl px-4 py-14">
@@ -102,4 +90,28 @@ function AccesoRapido({ href, icono, texto }: { href: string; icono: React.React
       {texto}
     </Link>
   );
+}
+
+async function ProyectosInicio() {
+  const { proyectos, fallo } = await listarProyectos();
+  return (<>
+      {/* ---------- PROYECTOS RECIENTES ---------- */}
+      <section id="publicaciones" className="bg-institucional-verdeClaro/40 py-14">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Proyectos publicados</h2>
+            <Link href="/proyectos" className="text-sm font-semibold text-institucional-verde hover:underline">
+              Ver todos →
+            </Link>
+          </div>
+          {fallo ? <p className="mt-6" role="alert">No se pudieron cargar los proyectos.</p> : proyectos.length === 0 ? <p className="mt-6">Aún no hay proyectos publicados.</p> : null}
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {proyectos.map((p) => (
+              <TarjetaProyecto key={p.id} proyecto={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+  </>);
 }

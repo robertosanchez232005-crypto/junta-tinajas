@@ -34,6 +34,19 @@ export function clienteNoticias() {
   if (!url || !key) throw new Error("Falta configurar Supabase.");
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }) }
+    global: { fetch: async (input, init) => {
+      const controller = new AbortController();
+      const signal = init?.signal;
+      const abortar = () => controller.abort();
+      if (signal?.aborted) controller.abort();
+      signal?.addEventListener("abort", abortar, { once: true });
+      const timeout = setTimeout(abortar, 10000);
+      try {
+        return await fetch(input, { ...init, signal: controller.signal, cache: "no-store" });
+      } finally {
+        clearTimeout(timeout);
+        signal?.removeEventListener("abort", abortar);
+      }
+    } }
   });
 }

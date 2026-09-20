@@ -12,9 +12,22 @@ export default function Login() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setBusy(true); setError('')
-    const { error } = await createClient().auth.signInWithPassword({ email, password })
-    if (error) { setError('Correo o contraseña incorrectos.'); setBusy(false); return }
-    router.push('/admin'); router.refresh()
+    const supabase = createClient()
+    try {
+      const { error: errorLogin } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+      if (errorLogin) { setError('Correo o contraseña incorrectos.'); return }
+      const { data: autorizado, error: errorPermiso } = await supabase.rpc('is_admin')
+      if (errorPermiso || autorizado !== true) {
+        await supabase.auth.signOut()
+        setError('Esta cuenta no tiene acceso al panel administrativo.')
+        return
+      }
+      router.replace('/admin'); router.refresh()
+    } catch {
+      setError('No se pudo completar el acceso. Intenta nuevamente.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   const input = 'w-full rounded-md border border-stone-300 px-3 py-2 focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700/30'

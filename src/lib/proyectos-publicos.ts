@@ -1,3 +1,4 @@
+import { publicaciones } from "./otras-publicaciones";
 import { clienteNoticias } from "./noticias-publicas";
 
 export type ProyectoPublico = {
@@ -8,13 +9,9 @@ export type ProyectoPublico = {
 };
 
 export async function listarProyectos(limite?: number): Promise<{ proyectos: ProyectoPublico[]; fallo: boolean }> {
-  try {
-    let consulta = clienteNoticias().from("proyectos").select("*")
-      .eq("publicado", true).order("created_at", { ascending: false });
-    if (limite) consulta = consulta.limit(limite);
-    const { data, error } = await consulta;
-    return { proyectos: error ? [] : (data ?? []) as ProyectoPublico[], fallo: !!error };
-  } catch { return { proyectos: [], fallo: true }; }
+  const { datos, fallo } = await publicaciones("proyectos");
+  const proyectos = datos as unknown as ProyectoPublico[];
+  return { proyectos: limite === undefined ? proyectos : proyectos.slice(0, limite), fallo };
 }
 
 export async function obtenerProyecto(id: string): Promise<{ proyecto: ProyectoPublico | null; fallo: boolean }> {

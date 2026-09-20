@@ -12,11 +12,12 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   if (!user) redirect('/admin/login')
   const { data: perfil } = await supabase.from('perfiles').select('nombre, rol').eq('id', user.id).maybeSingle()
 
-  if (!perfil) {
+  const { data: autorizado, error: errorPermiso } = await supabase.rpc('is_admin')
+  if (user.email?.trim().toLowerCase() !== 'juntacomunaltinajas1@gmail.com' || perfil?.rol !== 'admin' || errorPermiso || autorizado !== true) {
     return (
       <main className="mx-auto max-w-md p-10 text-center">
         <h1 className="text-lg font-bold">Tu cuenta no tiene acceso al panel</h1>
-        <p className="mt-2 text-stone-600">Pide a un administrador que active tu usuario.</p>
+        <p className="mt-2 text-stone-600">El acceso está reservado a la cuenta administradora autorizada.</p>
         <form action={async () => { 'use server'; await signOut(); redirect('/admin/login') }}>
           <button className="mt-4 rounded-md border px-4 py-2">Cerrar sesión</button>
         </form>

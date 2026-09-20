@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getResource, type Resource } from './resources'
+import { tieneAccesoAdmin } from './acceso'
 
 function buildSchema(r: Resource) {
   const shape: Record<string, z.ZodTypeAny> = {}
@@ -46,6 +47,8 @@ export async function saveRecord(key: string, id: string | null, values: Record<
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { ok: false, errors: {}, message: 'Tu sesión expiró. Vuelve a iniciar sesión.' }
 
+  if (!(await tieneAccesoAdmin(supabase))) return { ok: false, errors: {}, message: 'No tienes permiso para administrar el sitio.' }
+
   const q = id
     ? supabase.from(r.table).update(parsed.data).eq('id', id)
     : supabase.from(r.table).insert(parsed.data)
@@ -60,6 +63,7 @@ export async function deleteRecord(key: string, id: string): Promise<{ ok: boole
   const r = getResource(key)
   if (!r) return { ok: false, message: 'Sección no válida' }
   const supabase = await createClient()
+  if (!(await tieneAccesoAdmin(supabase))) return { ok: false, message: 'No tienes permiso para administrar el sitio.' }
   const { error, count } = await supabase.from(r.table).delete({ count: 'exact' }).eq('id', id)
   if (error) return { ok: false, message: error.message }
   if (!count) return { ok: false, message: 'Solo un administrador puede eliminar. Puedes desmarcar "Publicado" para ocultarlo.' }
