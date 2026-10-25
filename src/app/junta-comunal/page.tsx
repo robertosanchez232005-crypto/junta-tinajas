@@ -1,55 +1,48 @@
 import type { Metadata } from "next";
+import { MapPin, UserRound } from "lucide-react";
 
 export const metadata: Metadata = { title: "La Junta Comunal" };
 
-// Todo el contenido de esta página es texto provisional y editable, tal como
-// se solicitó. Reemplazar cada bloque con la información oficial suministrada
-// por la Junta Comunal (o conectarlo a `configuracion_institucional` en Supabase).
+const comunidades = ["Tinajas", "Balita", "Cermeño", "Los Palomos", "Conventillo", "Loma Alta"];
+const autoridades = [
+  { siglas: "H.R.", nombre: "Guillermo Álvarez", cargo: "Honorable Representante" },
+  { siglas: "H.S.", nombre: "José De la Rosa", cargo: "Honorable Suplente" }
+];
 
 export default function PaginaJuntaComunal() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-14">
-      <h1 className="text-3xl font-extrabold text-institucional-verdeOscuro">La Junta Comunal de Las Tinajas</h1>
+    <div className="fondo-puntos">
+      <div className="mx-auto max-w-5xl px-4 py-14 sm:py-20">
+        <h1 className="titulo-display text-4xl text-institucional-verdeOscuro sm:text-6xl">La Junta Comunal de Las Tinajas</h1>
 
-      <Bloque titulo="Historia">
-        Texto provisional: pendiente de redacción oficial por parte de la Junta Comunal.
-      </Bloque>
+        <section className="mt-12 rounded-3xl bg-white p-6 shadow-sm sm:p-10 marco" aria-labelledby="historia">
+          <h2 id="historia" className="titulo-display text-3xl text-institucional-verde">Historia</h2>
+          <div className="mt-5 space-y-5 text-lg leading-8 text-gray-700">
+            <p>El corregimiento de Tinajas, ubicado en el distrito de Dolega, provincia de Chiriquí, República de Panamá, fue fundado el <strong>28 de octubre de 1949</strong>. De acuerdo con el Censo de Población de 2023, contaba con <strong>2,053 habitantes</strong>.</p>
+            <p>El corregimiento está conformado por las comunidades de Tinajas, Balita, Cermeño, Los Palomos, Conventillo y Loma Alta, las cuales forman parte de una comunidad caracterizada por sus tradiciones, su identidad rural y el esfuerzo de sus habitantes por impulsar el desarrollo local.</p>
+            <ul className="flex flex-wrap gap-2" aria-label="Comunidades del corregimiento">
+              {comunidades.map((c) => <li key={c} className="inline-flex items-center gap-1.5 rounded-full bg-institucional-verdeClaro px-4 py-2 text-base font-semibold text-institucional-verdeOscuro transition hover:-translate-y-0.5 hover:bg-institucional-verde hover:text-white"><MapPin size={16} aria-hidden="true" />{c}</li>)}
+            </ul>
+            <p>A lo largo de su historia, las actividades agropecuarias han desempeñado un papel importante en la economía del corregimiento. Entre sus principales actividades productivas destacan la siembra de caña de azúcar, la elaboración artesanal de raspadura y la ganadería, prácticas que forman parte de las costumbres y tradiciones de la región.</p>
+            <p>Tinajas conserva el valor de sus raíces, el trabajo de su gente y sus tradiciones productivas, elementos que contribuyen a fortalecer la identidad de sus comunidades y a preservar su patrimonio cultural. Su historia representa el esfuerzo de generaciones de habitantes que han contribuido al crecimiento y desarrollo del corregimiento.</p>
+          </div>
+        </section>
 
-      <Bloque titulo="Misión">
-        Texto provisional: pendiente de redacción oficial por parte de la Junta Comunal.
-      </Bloque>
-
-      <Bloque titulo="Visión">
-        Texto provisional: pendiente de redacción oficial por parte de la Junta Comunal.
-      </Bloque>
-
-      <Bloque titulo="Valores">
-        Texto provisional: pendiente de definición oficial por parte de la Junta Comunal.
-      </Bloque>
-
-      <Bloque titulo="Autoridades">
-        [Pendiente] No se cuenta con nombres de representantes o funcionarios. Esta
-        sección debe completarse únicamente con información oficial confirmada.
-      </Bloque>
-
-      <Bloque titulo="Organigrama">
-        [Pendiente] Espacio reservado para el organigrama oficial de la Junta Comunal.
-      </Bloque>
-
-      <Bloque titulo="Información territorial">
-        Distrito de Dolega, provincia de Chiriquí. Superficie: 29.4 km². Población:
-        1,530 habitantes según el censo de 2010 (cifra histórica, no representa la
-        población actual).
-      </Bloque>
+        <section className="mt-10" aria-labelledby="autoridades">
+          <h2 id="autoridades" className="titulo-display text-3xl text-institucional-verde">Autoridades</h2>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            {autoridades.map((a) => (
+              <article key={a.nombre} className="group flex items-center gap-5 rounded-2xl border border-institucional-verde/20 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-institucional-verde hover:shadow-lg marco">
+                <span className="rounded-full bg-institucional-verdeClaro p-4 text-institucional-verde transition group-hover:bg-institucional-verde group-hover:text-white"><UserRound size={32} aria-hidden="true" /></span>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-institucional-verde">{a.cargo}</p>
+                  <p className="titulo-display mt-1 text-2xl text-institucional-verdeOscuro">{a.siglas} {a.nombre}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
-  );
-}
-
-function Bloque({ titulo, children }: { titulo: string; children: React.ReactNode }) {
-  return (
-    <section className="mt-8 border-t border-gray-200 pt-8">
-      <h2 className="text-xl font-bold text-institucional-verde">{titulo}</h2>
-      <p className="mt-2 text-gray-700">{children}</p>
-    </section>
   );
 }

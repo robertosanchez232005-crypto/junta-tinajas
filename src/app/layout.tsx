@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { Fraunces } from "next/font/google";
 import "./globals.css";
+
+const fuenteTitulos = Fraunces({ subsets: ["latin"], variable: "--font-display", weight: ["600", "800"] });
 import { Encabezado } from "@/components/layout/Encabezado";
 import { PiePagina } from "@/components/layout/PiePagina";
+import { BotonSubir } from "@/components/layout/BotonSubir";
 
 const nombreSitio = "Junta Comunal de Las Tinajas";
 const urlSitio = process.env.NEXT_PUBLIC_SITE_URL ?? "https://juntatinajas.gob.pa";
@@ -27,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RaizLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" className={fuenteTitulos.variable}>
       <body className="flex min-h-screen flex-col">
         {/* Enlace de salto para navegación por teclado / lectores de pantalla */}
         <a
@@ -41,6 +45,7 @@ export default function RaizLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <PiePagina />
+        <BotonSubir />
       </body>
     </html>
   );

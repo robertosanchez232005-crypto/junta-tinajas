@@ -32,10 +32,12 @@ export default async function PaginaProyecto({ params }: { params: { slug: strin
         ))}
       </div>
       {video && <a href={video} target="_blank" rel="noopener noreferrer" className="mt-6 inline-block text-institucional-verde underline">Ver video relacionado</a>}
-      <section className="mt-8 rounded-xl border p-6">
-        <h2 className="text-xl font-bold">Documento del proyecto</h2>
-        {pdf ? <a href={pdf} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-institucional-verde underline">Abrir PDF (puedes descargarlo desde el visor)</a> : <p className="mt-3">No hay un PDF publicado para este proyecto.</p>}
-      </section>
+      {pdf && (
+        <section className="mt-8 rounded-xl border p-6">
+          <h2 className="text-xl font-bold">Documento del proyecto</h2>
+          <a href={pdf} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-institucional-verde underline">Abrir PDF (puedes descargarlo desde el visor)</a>
+        </section>
+      )}
     </article>
   );
 }

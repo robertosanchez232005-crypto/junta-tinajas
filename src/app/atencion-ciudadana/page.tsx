@@ -1,3 +1,4 @@
+import { contacto } from "@/data/contacto";
 import type { Metadata } from "next";
 import { FormularioSolicitud } from "@/components/home/FormularioSolicitud";
 
@@ -41,9 +42,9 @@ export default function PaginaAtencionCiudadana() {
 
           <h2 className="mt-10 text-xl font-bold text-institucional-verde">Información de contacto</h2>
           <ul className="mt-4 space-y-2 text-gray-700">
-            <li><strong>Horario de atención:</strong> [Pendiente de confirmar por la Junta Comunal]</li>
-            <li><strong>Ubicación de la sede:</strong> [Pendiente de confirmar por la Junta Comunal]</li>
-            <li><strong>Teléfono:</strong> [Pendiente de confirmar por la Junta Comunal]</li>
+            <li><strong>Horario de atención:</strong> {contacto.horario}</li>
+            <li><strong>Ubicación de la sede:</strong> {contacto.direccion}</li>
+            <li><strong>Teléfono:</strong> {contacto.telefono}</li>
           </ul>
         </div>
 

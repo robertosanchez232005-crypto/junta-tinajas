@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import styles from "./Encabezado.module.css";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { BarraSuperior } from "./BarraSuperior";
 
 const enlaces = [
   { href: "/", texto: "Inicio" },
@@ -25,7 +26,7 @@ export function Encabezado() {
 
   return (
     <header className={inicio ? styles.portada : "sticky top-0 z-40 border-b border-institucional-verdeClaro bg-white/95 backdrop-blur"}>
-      {inicio && <div className={styles.barra}>Las Tinajas · Dolega · Chiriquí<Link href="/contacto">Contáctanos →</Link></div>}
+      {inicio && <div className={styles.barra}><BarraSuperior /></div>}
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-3">
           {/*

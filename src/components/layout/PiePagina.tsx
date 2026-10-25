@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { contacto } from "@/data/contacto";
+import { IconoRed } from "./IconoRed";
 
-// NOTA: los datos de contacto son marcadores provisionales. Reemplazar con la
-// información oficial suministrada por la Junta Comunal (ver "configuracion_institucional").
 export function PiePagina() {
   const anioActual = new Date().getFullYear();
 
@@ -27,11 +28,11 @@ export function PiePagina() {
 
         <div>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide">Contacto</h2>
-          <ul className="space-y-2 text-sm text-institucional-verdeClaro">
-            <li>Dirección: [Pendiente de confirmar por la Junta Comunal]</li>
-            <li>Teléfono: [Pendiente de confirmar por la Junta Comunal]</li>
-            <li>Correo: [Pendiente de confirmar por la Junta Comunal]</li>
-            <li>Horario: [Pendiente de confirmar por la Junta Comunal]</li>
+          <ul className="space-y-3 text-sm">
+            <li className="flex items-start gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-amber-300" aria-hidden="true" /><span>{contacto.direccion}</span></li>
+            <li className="flex items-start gap-3"><Phone size={18} className="mt-0.5 shrink-0 text-amber-300" aria-hidden="true" /><a href={"tel:" + contacto.telefonoEnlace} className="hover:underline">{contacto.telefono}</a></li>
+            <li className="flex items-start gap-3"><Mail size={18} className="mt-0.5 shrink-0 text-amber-300" aria-hidden="true" /><a href={"mailto:" + contacto.correo} className="break-all hover:underline">{contacto.correo}</a></li>
+            <li className="flex items-start gap-3"><Clock size={18} className="mt-0.5 shrink-0 text-amber-300" aria-hidden="true" /><span>{contacto.horario}</span></li>
           </ul>
         </div>
 
@@ -40,7 +41,6 @@ export function PiePagina() {
           <ul className="space-y-2 text-sm">
             <li><Link href="/transparencia" className="hover:underline">Transparencia</Link></li>
             <li><Link href="/atencion-ciudadana" className="hover:underline">Atención Ciudadana</Link></li>
-            <li><Link href="/#mapa-tinajas" className="hover:underline">Mapa de Las Tinajas</Link></li>
             <li><Link href="/aviso-privacidad" className="hover:underline">Aviso de privacidad</Link></li>
             <li><Link href="/terminos-de-uso" className="hover:underline">Términos de uso</Link></li>
           </ul>
@@ -48,9 +48,12 @@ export function PiePagina() {
 
         <div>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide">Redes sociales</h2>
-          <p className="text-sm text-institucional-verdeClaro">
-            [Pendiente: enlaces oficiales a redes sociales de la Junta Comunal]
-          </p>
+          <p className="text-sm font-semibold">{contacto.usuario}</p>
+          <div className="mt-4 flex gap-3">
+            {contacto.redes.map((r) => (
+              <a key={r.clave} href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre + " de la Junta Comunal"} className="rounded-full border-2 border-white/60 p-3 transition hover:-translate-y-1 hover:border-white hover:bg-white hover:text-institucional-verde"><IconoRed clave={r.clave} size={22} /></a>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -36,3 +36,27 @@ select:focus-visible {
   @apply w-full rounded-lg border border-gray-300 px-4 py-2.5 text-base
          focus:border-institucional-verde focus:ring-1 focus:ring-institucional-verde;
 }
+
+/* Títulos con carácter propio */
+.titulo-display { font-family: var(--font-display), Georgia, serif; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+
+/* Fondo suave con puntos para zonas que quedarían en blanco */
+.fondo-puntos {
+  background-color: theme("colors.institucional.verdeClaro");
+  background-image: radial-gradient(rgba(31, 93, 58, 0.16) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* Marco negro para que tarjetas y cuadros blancos se distingan del fondo */
+.marco { border: 2px solid #111 !important; }
+
+/* Barra superior: texto en movimiento que se detiene al pasar el mouse */
+@keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.barra-marquesina { mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); }
+.barra-marquesina-pista { animation: marquesina 38s linear infinite; }
+.barra-marquesina:hover .barra-marquesina-pista, .barra-marquesina:focus-within .barra-marquesina-pista { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .barra-marquesina-pista { animation: none; } }

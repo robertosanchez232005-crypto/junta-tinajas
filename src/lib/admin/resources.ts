@@ -38,6 +38,7 @@ export const RESOURCES: Resource[] = [
       { name: 'ubicacion', label: 'Ubicación (sector)', type: 'text' },
       { name: 'aprobado_consulta', label: 'Aprobado en Consulta Ciudadana', type: 'boolean' },
       { name: 'monto_aprobado', label: 'Monto aprobado (B/.)', type: 'number', help: 'Ingresar solo el monto aprobado oficialmente, sin comas de miles.' },
+      { name: 'monto_ejecutado', label: 'Monto ejecutado hasta hoy (B/.)', type: 'number', help: 'Lo que se ha ejecutado realmente, sin comas de miles. Déjalo vacío si aún no se registra.' },
       { name: 'fecha', label: 'Fecha', type: 'date' },
       { name: 'descripcion', label: 'Descripción', type: 'textarea' },
       { name: 'imagen_portada', label: 'Imagen de portada', type: 'image' },

@@ -1,11 +1,14 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { FileText, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { ComunidadTinajas } from "@/components/home/ComunidadTinajas";
 import { PortadaTinajas } from "@/components/home/PortadaTinajas";
 import { PublicacionesInicio } from "@/components/home/PublicacionesInicio";
-import Link from "next/link";
-import { TarjetaProyecto } from "@/components/proyectos/TarjetaProyecto";
+import { GaleriaComunidad } from "@/components/home/GaleriaComunidad";
+import { censo } from "@/data/censo";
+import { CifrasContador } from "@/components/home/CifrasContador";
+import { ProyectosFiltrables } from "@/components/home/ProyectosFiltrables";
 import { listarProyectos } from "@/lib/proyectos-publicos";
-import { FileText, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,80 +16,59 @@ export default function PaginaInicio() {
   return (
     <>
       <PortadaTinajas />
+
+      {/* ---------- ACCESOS RÁPIDOS: lo que más se busca, justo debajo de la portada ---------- */}
+      <section className="fondo-puntos border-b border-institucional-verdeClaro" aria-label="Accesos rápidos">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-8 sm:grid-cols-2 lg:grid-cols-4">
+          <AccesoRapido href="/atencion-ciudadana" icono={<Phone size={24} />} texto="Atención ciudadana" />
+          <AccesoRapido href="/proyectos" icono={<MapPin size={24} />} texto="Consultar proyectos" />
+          <AccesoRapido href="/transparencia" icono={<FileText size={24} />} texto="Descargar documentos" />
+          <AccesoRapido href="/contacto" icono={<ShieldCheck size={24} />} texto="Transparencia y contacto" />
+        </div>
+      </section>
+
       <ComunidadTinajas />
 
-      {/* ---------- FRANJA DE DATOS PRINCIPALES ---------- */}
-      <section className="border-y border-institucional-verdeClaro bg-white">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-8 text-center sm:grid-cols-4">
-          <div>
-            <p className="text-2xl font-extrabold text-institucional-verde">Chiriquí</p>
-            <p className="text-sm text-gray-600">Provincia</p>
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold text-institucional-verde">Dolega</p>
-            <p className="text-sm text-gray-600">Distrito</p>
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold text-institucional-verde">29.4 km²</p>
-            <p className="text-sm text-gray-600">Superficie</p>
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold text-institucional-verde">1,530 hab.</p>
-            <p className="text-sm text-gray-600">Población (censo 2010)</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- MAPA ---------- */}
-      <section id="mapa-tinajas" className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Mapa de Las Tinajas</h2>
-        <p className="mt-2 max-w-2xl text-gray-600">
-          Ubicación de referencia y límites territoriales de la comunidad.
-        </p>
-        <div className="mt-6">
-          <div className="flex h-[420px] items-center justify-center rounded-xl border-2 border-dashed border-institucional-verde/40 bg-institucional-verdeClaro px-6 text-center text-gray-700">
-            <div>
-              <p className="font-semibold text-institucional-verdeOscuro">
-                Mapa temporalmente en actualización
-              </p>
-              <p className="mt-2 text-sm">
-                Los límites territoriales oficiales de Las Tinajas se publicarán
-                cuando hayan sido validados por la Junta Comunal.
-              </p>
+      {censo.cifras.length > 0 && (
+        <section className="bg-white py-14 sm:py-20" aria-labelledby="titulo-censo">
+          <div className="mx-auto max-w-7xl px-4">
+            <h2 id="titulo-censo" className="titulo-display text-4xl text-institucional-verdeOscuro sm:text-5xl">Las Tinajas en cifras · Censo {censo.anio}</h2>
+            {censo.fuente && <p className="mt-3 max-w-xl text-gray-600">{censo.fuente}</p>}
+            <div className="mt-8 grid items-start gap-8 lg:grid-cols-2">
+              <CifrasContador cifras={censo.cifras} />
+              <div className="rounded-2xl border border-institucional-verdeClaro bg-white p-6 marco">
+                <h3 className="font-bold text-institucional-verdeOscuro">Crecimiento de la población</h3>
+                <ul className="mt-4 space-y-4">
+                  {censo.historico.map((h) => (
+                    <li key={h.anio} className="group">
+                      <div className="flex justify-between text-sm"><span className="font-semibold">{h.anio}</span><span className="tabular-nums">{h.habitantes.toLocaleString("es-PA")} hab.</span></div>
+                      <div className="mt-1 h-3 overflow-hidden rounded-full bg-institucional-verdeClaro"><div className="h-full rounded-full bg-institucional-verde transition group-hover:bg-institucional-verdeOscuro" style={{ width: Math.round((h.habitantes / censo.historico[censo.historico.length - 1].habitantes) * 100) + "%" }} /></div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <Suspense fallback={<div id="publicaciones" role="status" className="mx-auto max-w-6xl px-4 py-14">Cargando proyectos…</div>}>
+      <GaleriaComunidad />
+
+      <Suspense fallback={<div id="publicaciones" role="status" className="mx-auto max-w-7xl px-4 py-14">Cargando proyectos…</div>}>
         <ProyectosInicio />
       </Suspense>
 
-      <Suspense fallback={<p role="status" className="mx-auto max-w-6xl px-4 py-10">Cargando noticias, avisos y eventos…</p>}>
+      <Suspense fallback={<p role="status" className="mx-auto max-w-7xl px-4 py-10">Cargando noticias, avisos y eventos…</p>}>
         <PublicacionesInicio />
       </Suspense>
-
-      {/* ---------- ACCESOS RÁPIDOS ---------- */}
-      <section className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="mb-6 text-2xl font-bold text-institucional-verdeOscuro">Accesos rápidos</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <AccesoRapido href="/atencion-ciudadana" icono={<Phone size={22} />} texto="Atención ciudadana" />
-          <AccesoRapido href="/proyectos" icono={<MapPin size={22} />} texto="Consultar proyectos" />
-          <AccesoRapido href="/transparencia" icono={<FileText size={22} />} texto="Descargar documentos" />
-          <AccesoRapido href="/contacto" icono={<ShieldCheck size={22} />} texto="Transparencia y contacto" />
-        </div>
-      </section>
     </>
   );
 }
 
 function AccesoRapido({ href, icono, texto }: { href: string; icono: React.ReactNode; texto: string }) {
   return (
-    <Link
-      href={href}
-      className="flex flex-col items-center gap-3 rounded-xl border border-gray-200 bg-white p-6 text-center font-semibold text-institucional-verdeOscuro shadow-sm transition hover:border-institucional-verde hover:shadow-md"
-    >
-      <span className="rounded-full bg-institucional-verdeClaro p-3 text-institucional-verde">{icono}</span>
+    <Link href={href} className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 font-semibold text-institucional-verdeOscuro shadow-sm transition hover:-translate-y-1 hover:border-institucional-verde hover:shadow-md marco">
+      <span className="rounded-full bg-institucional-verdeClaro p-3 text-institucional-verde transition group-hover:bg-institucional-verde group-hover:text-white">{icono}</span>
       {texto}
     </Link>
   );
@@ -94,24 +76,5 @@ function AccesoRapido({ href, icono, texto }: { href: string; icono: React.React
 
 async function ProyectosInicio() {
   const { proyectos, fallo } = await listarProyectos();
-  return (<>
-      {/* ---------- PROYECTOS RECIENTES ---------- */}
-      <section id="publicaciones" className="bg-institucional-verdeClaro/40 py-14">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-institucional-verdeOscuro">Proyectos publicados</h2>
-            <Link href="/proyectos" className="text-sm font-semibold text-institucional-verde hover:underline">
-              Ver todos →
-            </Link>
-          </div>
-          {fallo ? <p className="mt-6" role="alert">No se pudieron cargar los proyectos.</p> : proyectos.length === 0 ? <p className="mt-6">Aún no hay proyectos publicados.</p> : null}
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {proyectos.map((p) => (
-              <TarjetaProyecto key={p.id} proyecto={p} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-  </>);
+  return <ProyectosFiltrables proyectos={proyectos} fallo={fallo} />;
 }
