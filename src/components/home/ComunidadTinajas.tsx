@@ -29,7 +29,7 @@ export function ComunidadTinajas() {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={comunidadFoto} alt="Comunidad de Las Tinajas" loading="lazy" className="h-80 w-full rounded-xl object-cover shadow-lg lg:h-[26rem]" />
         ) : <div className="grid h-80 grid-cols-3 grid-rows-2 gap-3 lg:h-[26rem]" aria-hidden="true">
-          {["tinajas-02", "tinajas-05", "tinajas-09", "tinajas-07"].map((n, i) => <div key={n} className={"group relative overflow-hidden rounded-2xl " + (i === 0 ? "col-span-2 row-span-2" : "")}><Image src={"/images/portada/" + n + ".jpg"} alt="" fill sizes="(max-width: 1024px) 60vw, 30vw" quality={70} className="object-cover transition duration-700 group-hover:scale-110" /></div>)}
+          {[["/images/comunidad/grupo-tipico.jpg", "50% 25%"], ["/images/portada/tinajas-06.jpg", "50% 50%"], ["/images/portada/tinajas-05.jpg", "50% 55%"]].map(([src, pos], i) => <div key={src} className={"group relative overflow-hidden rounded-2xl border-2 border-black " + (i === 0 ? "col-span-2 row-span-2" : "")}><Image src={src} alt="" fill sizes="(max-width: 1024px) 60vw, 30vw" quality={70} className="object-cover transition duration-700 group-hover:scale-110" style={{ objectPosition: pos }} /></div>)}
         </div>}
       </div>
     </section>

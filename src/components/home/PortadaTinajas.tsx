@@ -5,24 +5,24 @@ import styles from "./PortadaTinajas.module.css";
 
 // Fotografías exclusivas de la portada. No se consultan Noticias ni Supabase.
 const fotografias = [
-  { archivo: "tinajas-08.jpg", posicion: "50% 48%" },
-  { archivo: "tinajas-03.jpg", posicion: "50% 48%" },
-  { archivo: "tinajas-04.jpg", posicion: "50% 50%" },
-  { archivo: "tinajas-06.jpg", posicion: "50% 50%" },
-  { archivo: "tinajas-01.jpg", posicion: "50% 60%" },
-  { archivo: "tinajas-05.jpg", posicion: "50% 50%" },
-  { archivo: "tinajas-02.jpg", posicion: "50% 48%" },
-  { archivo: "tinajas-07.jpg", posicion: "50% 55%" },
-  { archivo: "tinajas-09.jpg", posicion: "50% 50%" },
+  { ruta: "/images/portada/tinajas-08.jpg", posicion: "50% 48%" },
+  { ruta: "/images/portada/tinajas-03.jpg", posicion: "50% 48%" },
+  { ruta: "/images/portada/tinajas-04.jpg", posicion: "50% 50%" },
+  { ruta: "/images/portada/tinajas-06.jpg", posicion: "50% 50%" },
+  { ruta: "/images/comunidad/desfile-tradicion.jpg", posicion: "35% 50%" },
+  { ruta: "/images/portada/tinajas-05.jpg", posicion: "50% 50%" },
+  { ruta: "/images/comunidad/equipo-futbol.jpg", posicion: "50% 55%" },
+  { ruta: "/images/comunidad/saludo-comunidad.jpg", posicion: "55% 40%" },
+  { ruta: "/images/comunidad/entrega-mochilas.jpg", posicion: "50% 35%" },
 ];
 
 export function PortadaTinajas() {
   const iconos = [Sun, Users, Home, Heart, Leaf, Bike, TreePine, MapPin];
   return <section className={styles.portada} aria-labelledby="titulo-portada">
     <div className={styles.fotos} aria-hidden="true">
-      {fotografias.map((foto, i) => <div key={foto.archivo} className={styles.panel}>
+      {fotografias.map((foto, i) => <div key={foto.ruta} className={styles.panel}>
         <Image
-          src={"/images/portada/" + foto.archivo}
+          src={foto.ruta}
           alt=""
           fill
           sizes={i === 1 ? "(max-width: 700px) 33vw, 40vw" : "(max-width: 700px) 33vw, 20vw"}

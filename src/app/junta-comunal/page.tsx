@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { MapPin, UserRound } from "lucide-react";
 
 export const metadata: Metadata = { title: "La Junta Comunal" };
@@ -24,6 +25,10 @@ export default function PaginaJuntaComunal() {
               {comunidades.map((c) => <li key={c} className="inline-flex items-center gap-1.5 rounded-full bg-institucional-verdeClaro px-4 py-2 text-base font-semibold text-institucional-verdeOscuro transition hover:-translate-y-0.5 hover:bg-institucional-verde hover:text-white"><MapPin size={16} aria-hidden="true" />{c}</li>)}
             </ul>
             <p>A lo largo de su historia, las actividades agropecuarias han desempeñado un papel importante en la economía del corregimiento. Entre sus principales actividades productivas destacan la siembra de caña de azúcar, la elaboración artesanal de raspadura y la ganadería, prácticas que forman parte de las costumbres y tradiciones de la región.</p>
+            <div className="grid grid-cols-2 gap-3" aria-hidden="true">
+              <div className="group relative h-56 overflow-hidden rounded-2xl border-2 border-black sm:h-72"><Image src="/images/portada/tinajas-05.jpg" alt="" fill sizes="(max-width: 640px) 50vw, 400px" quality={70} className="object-cover transition duration-700 group-hover:scale-110" style={{ objectPosition: "50% 60%" }} /></div>
+              <div className="group relative h-56 overflow-hidden rounded-2xl border-2 border-black sm:h-72"><Image src="/images/portada/tinajas-06.jpg" alt="" fill sizes="(max-width: 640px) 50vw, 400px" quality={70} className="object-cover transition duration-700 group-hover:scale-110" /></div>
+            </div>
             <p>Tinajas conserva el valor de sus raíces, el trabajo de su gente y sus tradiciones productivas, elementos que contribuyen a fortalecer la identidad de sus comunidades y a preservar su patrimonio cultural. Su historia representa el esfuerzo de generaciones de habitantes que han contribuido al crecimiento y desarrollo del corregimiento.</p>
           </div>
         </section>

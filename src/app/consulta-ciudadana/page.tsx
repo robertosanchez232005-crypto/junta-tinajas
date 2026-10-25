@@ -23,10 +23,6 @@ export default async function ConsultaCiudadana() {
   const restante = Math.max(total - ejecutadoTotal, 0);
   const porcentaje = total > 0 ? Math.min(Math.round((ejecutadoTotal / total) * 100), 100) : 0;
   const ejecPendiente = proyectos.some(p => p.ejecutado === null);
-  const anios = proyectos.map(p => p.anio).filter(a => /^\d{4}$/.test(a)).sort();
-  const vigencia = anios.length === 0 ? "Por registrar" : anios[0] === anios[anios.length - 1] ? anios[0] : anios[0] + " – " + anios[anios.length - 1];
-  const estados = new Set(proyectos.map(p => p.estado));
-  const estadoGeneral = estados.size === 0 ? "Por registrar" : estados.size === 1 ? (etiquetaEstado[[...estados][0]] ?? "En proceso") : estados.has("en_ejecucion") ? "En ejecución" : "En proceso";
   return <>
     <section className="bg-institucional-verdeOscuro px-4 py-14 text-center text-white">
       <h1 className="titulo-display text-5xl sm:text-7xl">Consulta Ciudadana</h1>
@@ -34,25 +30,23 @@ export default async function ConsultaCiudadana() {
     </section>
     <section className="mx-auto grid max-w-6xl gap-10 px-4 py-16 lg:grid-cols-2 lg:gap-16">
       <div>
-        <h2 className="border-l-4 border-institucional-verde pl-5 text-2xl font-bold italic text-institucional-verdeOscuro">La voz de los vecinos construye nuestro futuro</h2>
-        <p className="mt-6 leading-7 text-gray-700">La participación ciudadana permite compartir ideas y necesidades para el desarrollo de Las Tinajas.</p>
-        <p className="mt-4 leading-7 text-gray-700">Aquí puedes consultar los proyectos registrados por la Junta como aprobados en Consulta Ciudadana, sus montos y sus detalles.</p>
+        <h2 className="border-l-4 border-institucional-verde pl-5 text-2xl font-bold italic text-institucional-verdeOscuro">Decidimos juntos el futuro de Las Tinajas</h2>
+        <p className="mt-6 leading-7 text-gray-700">La Consulta Ciudadana abre las puertas de la Junta Comunal a todos los vecinos de Tinajas, Balita, Cermeño, Los Palomos, Conventillo y Loma Alta. Aquí tus ideas y necesidades se escuchan y se convierten en proyectos para la comunidad.</p>
+        <p className="mt-4 leading-7 text-gray-700">Conoce cada proyecto aprobado: cuánto cuesta, en qué estado se encuentra y cuánto se ha ejecutado, con información clara y al alcance de todos.</p>
         {!fallo && proyectos.length > 0 && <div className="mt-7 rounded-xl border border-institucional-verde/20 bg-gray-50 p-6 marco"><p className="text-xs font-semibold uppercase tracking-wide">{pendientes ? "Total de montos registrados" : "Inversión aprobada total"}</p><p className="mt-2 text-3xl font-bold text-institucional-verdeOscuro">{moneda(total)}</p>{pendientes && <p className="mt-2 text-sm text-gray-600">Hay proyectos con el monto pendiente de registrar; no se incluyen en este total.</p>}</div>}
-        <Link href="/atencion-ciudadana" className="mt-6 inline-block text-institucional-verde underline">Enviar una consulta o propuesta →</Link>
+        <Link href="/atencion-ciudadana" className="btn-secundario mt-6 inline-block">Enviar una consulta o propuesta →</Link>
       </div>
       <div className="self-start overflow-hidden rounded-xl border shadow-md marco">
         <h2 className="bg-institucional-verdeOscuro px-6 py-5 text-center font-bold uppercase text-white">Proyectos aprobados en Consulta Ciudadana</h2>
-        {fallo ? <p role="alert" className="p-6">No se pudo cargar la información. Intenta nuevamente más tarde.</p> : proyectos.length === 0 ? <p className="p-6 text-gray-600">Aún no hay proyectos publicados en esta sección.</p> : <div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Proyectos y montos aprobados en balboas</caption><thead className="bg-gray-50 text-xs uppercase"><tr><th scope="col" className="p-4">Nombre del proyecto</th><th scope="col" className="p-4">Estado</th><th scope="col" className="p-4 text-right">Aprobado</th><th scope="col" className="p-4 text-right">Ejecutado</th></tr></thead><tbody>{proyectos.map(p => <tr key={p.id} className="border-t"><th scope="row" className="p-4 font-medium"><Link href={"/proyectos/" + p.id} className="text-institucional-verde hover:underline">{p.titulo}</Link></th><td className="p-4">{etiquetaEstado[p.estado] ?? "—"}</td><td className="whitespace-nowrap p-4 text-right tabular-nums">{p.centavos === null ? "Por registrar" : moneda(p.centavos)}</td><td className="whitespace-nowrap p-4 text-right tabular-nums">{p.ejecutado === null ? "Por registrar" : moneda(p.ejecutado)}</td></tr>)}</tbody><tfoot className="border-t bg-gray-50 font-bold"><tr><th scope="row" colSpan={2} className="p-4">{pendientes ? "TOTAL REGISTRADO" : "TOTAL"}</th><td className="whitespace-nowrap p-4 text-right tabular-nums">{moneda(total)}</td><td className="whitespace-nowrap p-4 text-right tabular-nums">{moneda(ejecutadoTotal)}</td></tr></tfoot></table></div>}
+        {fallo ? <p role="alert" className="p-6">No se pudo cargar la información. Intenta nuevamente más tarde.</p> : proyectos.length === 0 ? <p className="p-6 text-gray-600">Aún no hay proyectos publicados en esta sección.</p> : <div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Proyectos y montos aprobados en balboas</caption><thead className="bg-gray-50 text-xs uppercase"><tr><th scope="col" className="p-4">Nombre del proyecto</th><th scope="col" className="p-4">Vigencia</th><th scope="col" className="p-4 text-right">Monto del proyecto</th><th scope="col" className="p-4">Estado</th></tr></thead><tbody>{proyectos.map(p => <tr key={p.id} className="border-t"><th scope="row" className="p-4 font-medium"><Link href={"/proyectos/" + p.id} className="text-institucional-verde hover:underline">{p.titulo}</Link></th><td className="p-4">{p.anio || "Por registrar"}</td><td className="whitespace-nowrap p-4 text-right tabular-nums">{p.centavos === null ? "Por registrar" : moneda(p.centavos)}</td><td className="p-4">{etiquetaEstado[p.estado] ?? "—"}</td></tr>)}</tbody><tfoot className="border-t bg-gray-50 font-bold"><tr><th scope="row" colSpan={2} className="p-4">{pendientes ? "TOTAL REGISTRADO" : "TOTAL"}</th><td className="whitespace-nowrap p-4 text-right tabular-nums">{moneda(total)}</td><td className="p-4"></td></tr></tfoot></table></div>}
       </div>
     </section>
     {!fallo && proyectos.length > 0 && (
       <section className="fondo-puntos px-4 py-14" aria-labelledby="avance-titulo">
         <div className="mx-auto max-w-6xl">
           <h2 id="avance-titulo" className="titulo-display text-3xl text-institucional-verdeOscuro sm:text-4xl">Avance de la inversión</h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
-              ["Vigencia", vigencia, ""],
-              ["Estado", estadoGeneral, ""],
               ["Inversión ejecutada total", moneda(ejecutadoTotal), ejecPendiente ? "Hay proyectos con la ejecución por registrar." : ""],
               ["Ejecución restante", moneda(restante), "Aprobado menos ejecutado."]
             ].map(([t, v, n]) => (

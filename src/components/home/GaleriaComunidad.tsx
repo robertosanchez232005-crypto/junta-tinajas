@@ -4,9 +4,22 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
-const fotos = ["tinajas-08", "tinajas-03", "tinajas-04", "tinajas-06", "tinajas-01", "tinajas-05", "tinajas-02", "tinajas-07", "tinajas-09"].map((n) => "/images/portada/" + n + ".jpg");
-// Mosaico: algunas fotos ocupan más espacio para que la cuadrícula no se vea uniforme.
-const forma = ["sm:col-span-2 sm:row-span-2", "", "", "", "sm:col-span-2", "", "", "sm:row-span-2", ""];
+const fotos: { src: string; alt: string; forma?: string; pos?: string }[] = [
+  { src: "/images/comunidad/desfile-tradicion.jpg", alt: "Desfile de tradición con sombreros y estandarte", forma: "sm:col-span-2 sm:row-span-2", pos: "35% 50%" },
+  { src: "/images/comunidad/entrega-mochilas.jpg", alt: "Niños de una escuela con mochilas nuevas", pos: "50% 35%" },
+  { src: "/images/comunidad/grupo-tipico.jpg", alt: "Grupo con vestimenta típica panameña", forma: "sm:row-span-2", pos: "50% 30%" },
+  { src: "/images/comunidad/grinch-navidad.jpg", alt: "Niño con un personaje navideño en una fiesta comunitaria" },
+  { src: "/images/comunidad/navidad-nocturna.jpg", alt: "Familia en un vehículo decorado de Navidad" },
+  { src: "/images/comunidad/equipo-futbol.jpg", alt: "Equipo de fútbol de la comunidad con sus autoridades", forma: "sm:col-span-2", pos: "50% 55%" },
+  { src: "/images/comunidad/saludo-comunidad.jpg", alt: "Saludo de la comunidad durante una actividad", pos: "55% 40%" },
+  { src: "/images/comunidad/visita-hogar.jpg", alt: "Visita a una familia de la comunidad", forma: "sm:row-span-2", pos: "50% 30%" },
+  { src: "/images/portada/tinajas-05.jpg", alt: "Cocción de raspadura en olla grande" },
+  { src: "/images/portada/tinajas-06.jpg", alt: "Bueyes trabajando en el campo" },
+  { src: "/images/portada/tinajas-02.jpg", alt: "Grupo de la comunidad en una actividad" },
+  { src: "/images/portada/tinajas-03.jpg", alt: "Mesa de la Junta Comunal en una actividad" },
+  { src: "/images/portada/tinajas-04.jpg", alt: "Elaboración artesanal de raspadura" },
+  { src: "/images/portada/tinajas-08.jpg", alt: "Vista aérea de una celebración en Las Tinajas" }
+];
 
 export function GaleriaComunidad() {
   const [abierta, setAbierta] = useState<number | null>(null);
@@ -29,11 +42,11 @@ export function GaleriaComunidad() {
       <div className="mx-auto max-w-7xl px-4">
         <h2 id="titulo-galeria" className="titulo-display text-4xl text-institucional-verdeOscuro sm:text-5xl">Así se vive Las Tinajas</h2>
         <p className="mt-3 max-w-xl text-lg text-gray-600">Toca una foto para verla grande.</p>
-        <div className="mt-10 grid auto-rows-[10rem] grid-cols-2 gap-3 sm:auto-rows-[11rem] sm:grid-cols-4">
-          {fotos.map((src, i) => (
-            <button key={src} type="button" onClick={() => setAbierta(i)} aria-label={"Ver foto " + (i + 1) + " de " + fotos.length}
-              className={"group relative overflow-hidden rounded-2xl bg-institucional-verdeClaro " + forma[i]}>
-              <Image src={src} alt="" fill sizes="(max-width: 640px) 50vw, 25vw" quality={70} className="object-cover transition duration-700 group-hover:scale-110" />
+        <div className="mt-10 grid auto-rows-[10rem] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[11rem] sm:grid-cols-4">
+          {fotos.map(({ src, alt, forma, pos }, i) => (
+            <button key={src} type="button" onClick={() => setAbierta(i)} aria-label={"Ampliar: " + alt}
+              className={"group relative overflow-hidden rounded-2xl border-2 border-black bg-institucional-verdeClaro " + (forma ?? "")}>
+              <Image src={src} alt={alt} fill sizes="(max-width: 640px) 50vw, 25vw" quality={70} className="object-cover transition duration-700 group-hover:scale-110" style={{ objectPosition: pos ?? "50% 50%" }} />
               <span className="absolute inset-0 bg-institucional-verdeOscuro/0 transition group-hover:bg-institucional-verdeOscuro/25" />
             </button>
           ))}
@@ -45,7 +58,7 @@ export function GaleriaComunidad() {
           <button type="button" aria-label="Cerrar" className="absolute right-4 top-4 rounded-full bg-white/15 p-3 text-white hover:bg-white/30" onClick={() => setAbierta(null)}><X size={24} /></button>
           <button type="button" aria-label="Foto anterior" className="absolute left-3 rounded-full bg-white/15 p-3 text-white hover:bg-white/30" onClick={(e) => { e.stopPropagation(); mover(-1); }}><ChevronLeft size={28} /></button>
           <div className="relative h-[80vh] w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
-            <Image src={fotos[abierta]} alt="" fill sizes="90vw" quality={85} className="object-contain" />
+            <Image src={fotos[abierta].src} alt={fotos[abierta].alt} fill sizes="90vw" quality={85} className="object-contain" />
           </div>
           <button type="button" aria-label="Foto siguiente" className="absolute right-3 rounded-full bg-white/15 p-3 text-white hover:bg-white/30" onClick={(e) => { e.stopPropagation(); mover(1); }}><ChevronRight size={28} /></button>
         </div>
