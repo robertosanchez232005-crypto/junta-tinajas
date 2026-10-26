@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const urlSitio = process.env.NEXT_PUBLIC_SITE_URL ?? "https://juntatinajas.gob.pa";
+import { urlSitio } from "@/lib/sitio";
 
 export default function robots(): MetadataRoute.Robots {
   return {

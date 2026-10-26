@@ -6,9 +6,10 @@ const fuenteTitulos = Fraunces({ subsets: ["latin"], variable: "--font-display",
 import { Encabezado } from "@/components/layout/Encabezado";
 import { PiePagina } from "@/components/layout/PiePagina";
 import { BotonSubir } from "@/components/layout/BotonSubir";
+import { urlSitio } from "@/lib/sitio";
+import { contacto } from "@/data/contacto";
 
 const nombreSitio = "Junta Comunal de Las Tinajas";
-const urlSitio = process.env.NEXT_PUBLIC_SITE_URL ?? "https://juntatinajas.gob.pa";
 
 export const metadata: Metadata = {
   metadataBase: new URL(urlSitio),
@@ -17,22 +18,43 @@ export const metadata: Metadata = {
     template: `%s | ${nombreSitio}`
   },
   description:
-    "Portal institucional de la Junta Comunal de Las Tinajas, distrito de Dolega, provincia de Chiriquí, Panamá. Información, proyectos, transparencia y atención ciudadana.",
+    "Sitio oficial de la Junta Comunal de Las Tinajas (Tinajas), distrito de Dolega, provincia de Chiriquí, Panamá. Proyectos, consulta ciudadana, transparencia, noticias y atención a la comunidad.",
+  keywords: ["Junta Comunal de Tinajas", "Junta Comunal de Las Tinajas", "Tinajas Dolega", "Tinajas Chiriquí", "corregimiento de Tinajas", "Consulta Ciudadana Tinajas"],
+  alternates: { canonical: "/" },
   openGraph: {
     title: nombreSitio,
     description: "Trabajando juntos por el desarrollo de nuestra comunidad.",
     url: urlSitio,
     siteName: nombreSitio,
     locale: "es_PA",
-    type: "website"
+    type: "website",
+    images: [{ url: "/images/comunidad/desfile-tradicion.jpg", width: 1040, height: 694, alt: nombreSitio }]
   },
+  twitter: { card: "summary_large_image", title: nombreSitio, description: "Trabajando juntos por el desarrollo de nuestra comunidad.", images: ["/images/comunidad/desfile-tradicion.jpg"] },
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION },
   robots: { index: true, follow: true }
+};
+
+const datosEstructurados = {
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  name: nombreSitio,
+  alternateName: ["Junta Comunal de Tinajas", "Junta Comunal Tinajas"],
+  url: urlSitio,
+  logo: urlSitio + "/images/logo-junta-tinajas.png",
+  image: urlSitio + "/images/comunidad/desfile-tradicion.jpg",
+  email: contacto.correo,
+  telephone: "+507" + contacto.telefono.replace(/\D/g, ""),
+  address: { "@type": "PostalAddress", streetAddress: contacto.direccion, addressLocality: "Tinajas, Dolega", addressRegion: "Chiriquí", addressCountry: "PA" },
+  openingHours: "8:00-16:00",
+  sameAs: contacto.redes.map((r) => r.url)
 };
 
 export default function RaizLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={fuenteTitulos.variable}>
       <body className="flex min-h-screen flex-col">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datosEstructurados) }} />
         {/* Enlace de salto para navegación por teclado / lectores de pantalla */}
         <a
           href="#contenido-principal"
