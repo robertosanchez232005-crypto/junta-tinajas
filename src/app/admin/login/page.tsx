@@ -15,7 +15,14 @@ export default function Login() {
     const supabase = createClient()
     try {
       const { error: errorLogin } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-      if (errorLogin) { setError('Correo o contraseña incorrectos.'); return }
+      if (errorLogin) {
+        const credenciales = errorLogin.code === 'invalid_credentials' || /invalid login credentials/i.test(errorLogin.message)
+        if (credenciales) setError('Correo o contraseña incorrectos.')
+        else if (errorLogin.code === 'email_not_confirmed') setError('El correo de esta cuenta aún no está confirmado.')
+        else if (errorLogin.status === 429) setError('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.')
+        else setError('El sistema no está disponible en este momento (no es un error de tu contraseña). Intenta de nuevo en unos minutos.')
+        return
+      }
       const { data: autorizado, error: errorPermiso } = await supabase.rpc('is_admin')
       if (errorPermiso || autorizado !== true) {
         await supabase.auth.signOut()
